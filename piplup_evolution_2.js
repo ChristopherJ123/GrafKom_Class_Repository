@@ -235,7 +235,14 @@ class Piplup {
             // Head
             { geom: Geometry.generateSphere(0.8, 0.8, 0.8, 20, 20, C.HEAD), trans: createTransform(0, 1.5, 0)},
 
+            { geom: Geometry.generateSphere(0.6, 0.6, 0.6, 50, 50, C.BODY), trans: createTransform(-0.10, 1.52, 0.25)},
+            { geom: Geometry.generateSphere(0.6, 0.6, 0.6, 50, 50, C.BODY), trans: createTransform(0.10, 1.52, 0.25)},
+            // Eyes
+            { geom: Geometry.generateSphere(0.1, 0.2, 0.1, 10, 10, C.BLACK), trans: createTransform(-0.3, 1.6, 0.80)},
+            { geom: Geometry.generateSphere(0.05, 0.05, 0.05, 10, 10, C.WHITE), trans: createTransform(-0.3, 1.7, 0.85)},
 
+            { geom: Geometry.generateSphere(0.1, 0.2, 0.1, 10, 10, C.BLACK), trans: createTransform(0.3, 1.6, 0.80)},
+            { geom: Geometry.generateSphere(0.05, 0.05, 0.05, 10, 10, C.WHITE), trans: createTransform(0.3, 1.7, 0.85)},
             // Beak using the new generateBeak function
             { geom: Geometry.generateBeak(0.3, 0.2, 0.6, 15, C.BEAK), trans: (() => {
                     let m = createTransform(0, 1.3, 1.1);
@@ -251,13 +258,19 @@ class Piplup {
             { geom: Geometry.generateSphere(0.4, 0.15, 0.5, 10, 10, C.FEET), trans: createTransform(-0.5, -1.2, 0.2)},
             { geom: Geometry.generateSphere(0.4, 0.15, 0.5, 10, 10, C.FEET), trans: createTransform(0.5, -1.2, 0.2)},
             // Hands (Flippers)
-            { geom: Geometry.generateSphere(0.2, 0.7, 0.5, 15, 15, C.BODY), trans: (() => {
+            { geom: Geometry.generateSphere(0.2, 0.7, 0.5, 15, 15, C.HEAD), trans: (() => {
                     let m = createTransform(-0.9, 0.3, -0.2);
                     LIBS.rotateZ(m, LIBS.degToRad(-20));
                     LIBS.rotateX(m, LIBS.degToRad(-10));
                     return m;
                 })()},
-            { geom: Geometry.generateSphere(0.2, 0.7, 0.5, 15, 15, C.BODY), trans: (() => {
+            { geom: Geometry.generateSphere(0.18, 0.85, 0.48, 15, 15, C.BODY), trans: (() => {
+                    let m = createTransform(-0.9, 0.15, -0.2);
+                    LIBS.rotateZ(m, LIBS.degToRad(-20));
+                    LIBS.rotateX(m, LIBS.degToRad(-10));
+                    return m;
+                })()},
+            { geom: Geometry.generateSphere(0.2, 0.7, 0.5, 15, 15, C.HEAD), trans: (() => {
                     let m = createTransform(0.9, 0.3, -0.2);
                     LIBS.rotateZ(m, LIBS.degToRad(20));
                     LIBS.rotateX(m, LIBS.degToRad(-10));
