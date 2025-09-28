@@ -79,7 +79,7 @@ const Geometry = {
         return { vertices, faces };
     },
 
-    generateTubeFromSpline: function(controlPoints, segments, radius, radialSegments) {
+    generateTubeFromSpline: function(controlPoints, segments, radius, radialSegments, color) {
         var vertices = [];
         var faces = [];
         var splinePoints = [];
@@ -138,7 +138,9 @@ const Geometry = {
                 var y = point[1] + radius * (Math.cos(theta) * normal[1] + Math.sin(theta) * binormal[1]);
                 var z = point[2] + radius * (Math.cos(theta) * normal[2] + Math.sin(theta) * binormal[2]);
                 vertices.push(x, y, z);
-                vertices.push(1, 0.8, 0.5);
+
+                // Color
+                vertices.push(color[0], color[1], color[2]);
                 // vertices.push(j / radialSegments, i / splinePoints.length, 0.5); // color
             }
         }
@@ -213,7 +215,7 @@ class Piplup {
         // Piplup Colors
         const C = {
             BODY: [0.52, 0.80, 1.00], HEAD: [0.20, 0.38, 0.64], BEAK: [1.00, 0.84, 0.00], CAPE: [0.24, 0.42, 0.96],
-            EYE_W: [1.00, 1.00, 1.00], EYE_P: [0.00, 0.00, 0.00], FEET: [1.00, 0.65, 0.00]
+            EYE_W: [1.00, 1.00, 1.00], BLACK: [0.00, 0.00, 0.00], FEET: [1.00, 0.65, 0.00], WHITE: [1.00, 1.00, 1.00]
         };
 
         // Helper function to create a translation matrix using your libs.js functions
@@ -227,14 +229,20 @@ class Piplup {
 
         // Define parts and their local transformations
         const partDefinitions = [
-            // Body and Head
-            { geom: Geometry.generateSphere(1, 1.2, 1, 20, 20, C.BODY), trans: LIBS.get_I4()},
+            // Body
+            { geom: Geometry.generateSphere(0.8, 1.1, 1, 20, 20, C.BODY), trans: LIBS.get_I4()},
+
+            // Head
             { geom: Geometry.generateSphere(0.8, 0.8, 0.8, 20, 20, C.HEAD), trans: createTransform(0, 1.5, 0)},
+
+            { geom: Geometry.generateSphere(0.6, 0.6, 0.6, 50, 50, C.WHITE), trans: createTransform(-0.10, 1.52, 0.25)},
+            { geom: Geometry.generateSphere(0.6, 0.6, 0.6, 50, 50, C.WHITE), trans: createTransform(0.10, 1.52, 0.25)},
             // Eyes
-            { geom: Geometry.generateSphere(0.2, 0.2, 0.1, 10, 10, C.EYE_W), trans: createTransform(-0.3, 1.6, 0.7)},
-            { geom: Geometry.generateSphere(0.2, 0.2, 0.1, 10, 10, C.EYE_W), trans: createTransform(0.3, 1.6, 0.7)},
-            { geom: Geometry.generateSphere(0.1, 0.1, 0.1, 10, 10, C.EYE_P), trans: createTransform(-0.3, 1.6, 0.8)},
-            { geom: Geometry.generateSphere(0.1, 0.1, 0.1, 10, 10, C.EYE_P), trans: createTransform(0.3, 1.6, 0.8)},
+            { geom: Geometry.generateSphere(0.1, 0.2, 0.1, 10, 10, C.BLACK), trans: createTransform(-0.3, 1.6, 0.80)},
+            { geom: Geometry.generateSphere(0.05, 0.05, 0.05, 10, 10, C.WHITE), trans: createTransform(-0.3, 1.7, 0.85)},
+
+            { geom: Geometry.generateSphere(0.1, 0.2, 0.1, 10, 10, C.BLACK), trans: createTransform(0.3, 1.6, 0.80)},
+            { geom: Geometry.generateSphere(0.05, 0.05, 0.05, 10, 10, C.WHITE), trans: createTransform(0.3, 1.7, 0.85)},
             // Beak using the new generateBeak function
             { geom: Geometry.generateBeak(0.3, 0.2, 0.6, 15, C.BEAK), trans: (() => {
                     let m = createTransform(0, 1.3, 1.1);
@@ -266,17 +274,19 @@ class Piplup {
             { geom: Geometry.generateTubeFromSpline(
                     // Define control points for the curve's path
                     [
-                        [0.0, 0.2, -0.9],   // Start point on the lower back
-                        [-0.3, -0.3, -1.3], // First curve point
-                        [0.1, -0.5, -1.8],  // Second curve point
-                        [-0.2, -0.8, -1.5]   // End point, slightly flared out
+                        [0.0, 0.0, -0.9],   // Start point on the lower back
+                        [0.0, 0.05, -1.8],
+                        [0.0, -0.2, -1.3], // First curve point
+                        [0.0, -0.4, -2.0],  // Second curve point
+                        [0.0, -0.7, -1.5]   // End point, slightly flared out
                     ],
                     100, // Segments for smoothness
-                    0.2, // Radius of the tube (thickness of the cape)
-                    20   // Radial segments
+                    0.15, // Radius of the tube (thickness of the cape)
+                    20,   // Radial segments
+                    [0.20, 0.38, 0.64], // Color
                 ),
                 // We don't need a separate transform since the points are in world space relative to the body
-                trans: LIBS.get_I4()},
+                trans: createTransform(0, 0, 0.5)},
             { geom: Geometry.generateSphere(0.7, 0.3, 0.6, 20, 20, C.HEAD), trans: (() => {
                     let m = createTransform(0.3, 0.8, 0.4);
                     LIBS.rotateY(m, LIBS.degToRad(-60));
